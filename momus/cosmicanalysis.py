@@ -142,7 +142,12 @@ def CosmicAnalysis(sampler, x, y, latex_eq=r"a_0 + a_1 x", intrinsic_true=None, 
     y = np.asarray(y, dtype=float)
 
     # Read LaTeX Equation
-    (expr, x_symbol, coefficients, num_coeffs, model_func) = read_latex_equation(latex_eq)
+    (expr, x_symbol, coefficients, num_coeffs, model_func, domain) = read_latex_equation(latex_eq)
+    if domain[0] == False: 
+        raise ValueError(
+            f"Equation is not continous over all real values."
+            f"Valid range for inputted equation: {domain[1]}"
+        )
 
     # Create Parameter Labels
     coefficient_labels = [rf"$a_{{{i}}}$" for i in range(num_coeffs)]

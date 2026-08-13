@@ -101,9 +101,12 @@ def read_latex_equation(latex_eq, default_x="x", backend="lark"):
             return (0, int(name[2:]))
         return (1, name)
     coefficients = sorted(coefficients, key=coefficient_sort_key)
+    
+    domain = sp.calculus.util.continuous_domain(expr, x_symbol, sp.S.Reals)
+    is_continuous_everywhere = domain == sp.S.Reals
 
     # Number of Coefficients
     num_coeffs = len(coefficients)
     model_func = sp.lambdify([x_symbol, *coefficients], expr, modules=["numpy"])
-    return (expr, x_symbol, coefficients, num_coeffs, model_func)
+    return (expr, x_symbol, coefficients, num_coeffs, model_func, [is_continuous_everywhere, domain])
 #-----------------------------------------------------------------------#

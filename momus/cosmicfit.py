@@ -180,8 +180,13 @@ def CosmicFit(x, y, xerr=None, yerr=None, xyerr=None, nwalkers=32, nsteps=5000, 
     if ncores is None:
         ncores = mp.cpu_count()
 
+    moves = [
+            (emcee.moves.DESnookerMove(), 0.05),
+            (emcee.moves.DEMove(gamma0=1.2), 0.4),
+            (emcee.moves.StretchMove(a=5), 0.55)
+            ] 
     with ThreadPool(processes=ncores) as pool:
-        sampler = emcee.EnsembleSampler(nwalkers, ndim, model.ln_posterior, pool=pool)
+        sampler = emcee.EnsembleSampler(nwalkers, ndim, model.ln_posterior, pool=pool, moves=moves)
         sampler.run_mcmc(initial_params, nsteps, progress=True)
     #-------------------------------------------------------------------#
 

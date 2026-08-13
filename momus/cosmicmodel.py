@@ -33,7 +33,12 @@ class CosmicModel:
 
         # Read LaTeX Equation
         self.latex_eq = latex_eq
-        self.expr, self.x_symbol, self.coefficients, self.num_coeffs, self.model_func = read_latex_equation(latex_eq)
+        self.expr, self.x_symbol, self.coefficients, self.num_coeffs, self.model_func, self.domain = read_latex_equation(latex_eq)
+        if self.domain[0] == False: 
+            raise ValueError(
+                f"Equation is not continous over all real values."
+                f"Valid range for inputted equation: {self.domain[1]}"
+            )
 
         # Total Number of Parameters
         self.ndim = self.num_coeffs + 3

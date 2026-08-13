@@ -27,7 +27,12 @@ def generate_synthetic_data(n_data, latex_eq, coeffs_true, x_range=(-2, 5), sigm
 
     # Read LaTeX Equation
     #-------------------------------------------------------------------#
-    expr, x_symbol, coefficients, num_coeffs, model_func = read_latex_equation(latex_eq)
+    expr, x_symbol, coefficients, num_coeffs, model_func, domain = read_latex_equation(latex_eq)
+    if domain[0] == False: 
+        raise ValueError(
+            f"Equation is not continous over all real values."
+            f"Valid range for inputted equation: {domain[1]}"
+        )
     #-------------------------------------------------------------------#
 
 
