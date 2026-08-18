@@ -1,11 +1,12 @@
 #-----------------------------------------------------------------------#
-# momus.cosmicmodel v0.2.0 (Generalized LaTeX Version)
+# momus.cosmicmodel v0.1.0
 # By Hunter Brooks, at UToledo, Toledo
 #-----------------------------------------------------------------------#
 
 # Import Packages
 #-----------------------------------------------------------------------#
 from numpy.polynomial.legendre import leggauss
+from scipy.integrate import quad_vec
 import numpy as np
 #-----------------------------------------------------------------------#
 
@@ -42,8 +43,6 @@ class CosmicModel:
 
         # Total Number of Parameters
         self.ndim = self.num_coeffs + 3
-
-        # Set Number of Quadrature Points
         self.quad_points = quad_points
         self.gl_nodes, self.gl_weights = leggauss(quad_points)
         self.log_2pi = np.log(2.0 * np.pi)
@@ -61,48 +60,60 @@ class CosmicModel:
     #-------------------------------------------------------------------#
     def ln_likelihood(self, pars):
 
-        # Separate LaTeX Coefficients and Intrinsic Scatter
+        # Separate model coefficients and intrinsic scatter
         coeffs = pars[:self.num_coeffs]
         sigma_x_int = pars[self.num_coeffs]
         sigma_y_int = pars[self.num_coeffs + 1]
         sigma_xy_int = pars[self.num_coeffs + 2]
 
-        # Calculate Total Covariance
+        # Total covariance
         var_x = self.x_err**2 + sigma_x_int**2
         var_y = self.y_err**2 + sigma_y_int**2
         cov_xy = self.xy_err + sigma_xy_int
 
-        # Calculate Determinant of Total Covariance Matrix
+        # Determinant
         det = var_x * var_y - cov_xy**2
         if np.any(~np.isfinite(det)) or np.any(det <= 0.0):
             return -np.inf
 
-        # Define Integration Limits for Latent True x
-        sigma_x_total = np.sqrt(var_x)
-        lower = self.x - 10.0 * sigma_x_total
-        upper = self.x + 10.0 * sigma_x_total
-
-        # Transform Gauss-Legendre Nodes to Integration Interval
-        xi = (0.5 * (upper[:, None] - lower[:, None]) * self.gl_nodes[None, :] + 0.5 * (upper[:, None] + lower[:, None]))
-        weights = (0.5 * (upper[:, None] - lower[:, None]) * self.gl_weights[None, :])
-
-        # Evaluate Model at Every Latent x Value and Residuals and Total Covariance Matrix
-        P_xi = self.evaluate_model(xi, coeffs)
-        dx = self.x[:, None] - xi
-        dy = self.y[:, None] - P_xi
+        # Inverse covariance matrix
         inv00 = var_y / det
         inv01 = -cov_xy / det
         inv11 = var_x / det
 
-        # Calculate Likelihood 
-        chi2 = (inv00[:, None] * dx**2 + 2.0 * inv01[:, None] * dx * dy + inv11[:, None] * dy**2)
-        logp = (-self.log_2pi - 0.5 * np.log(det)[:, None] - 0.5 * chi2)
-        integrand = np.exp(logp) * weights
-        integral = np.sum(integrand, axis=1)
+        # Finite approximation to the infinite integral
+        sigma_x_total = np.sqrt(var_x)
+        lower = self.x - 10.0 * sigma_x_total
+        upper = self.x + 10.0 * sigma_x_total
 
-        # Calculate Total Log Likelihood
+        # Transform Gauss-Legendre nodes from [-1, 1]
+        half_width = 0.5 * (upper - lower)
+        midpoint = 0.5 * (upper + lower)
+        xi = (midpoint[:, None] + half_width[:, None] * self.gl_nodes[None, :])
+        weights = (half_width[:, None] * self.gl_weights[None, :])
+
+        # Evaluate model at every latent x*
+        P_xi = self.evaluate_model(xi, coeffs)
+
+        # Residuals
+        dx = self.x[:, None] - xi
+        dy = self.y[:, None] - P_xi
+
+        # Mahalanobis distance
+        log_x_prior = -np.log(upper - lower)
+        chi2 = (inv00[:, None] * dx**2 + 2.0 * inv01[:, None] * dx * dy + inv11[:, None] * dy**2)
+        log_integrand = (-self.log_2pi - 0.5 * np.log(det)[:, None] - 0.5 * chi2)
+        log_integrand += log_x_prior
+
+        # Integral ≈ Σ_j w_j exp(log_integrand_j)
+        max_log = np.max(log_integrand, axis=1)
+        integral = (np.exp(max_log) * np.sum(weights * np.exp(log_integrand - max_log[:, None]), axis=1))
+
+        # Check integral
         if np.any(~np.isfinite(integral)) or np.any(integral <= 0.0):
             return -np.inf
+
+        # Total log likelihood
         return np.sum(np.log(integral))
     #-------------------------------------------------------------------#
 

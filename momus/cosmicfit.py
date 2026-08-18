@@ -5,8 +5,8 @@
 
 # Import Packages
 #-----------------------------------------------------------------------#
+from scipy.optimize import least_squares, differential_evolution
 from multiprocessing.pool import ThreadPool
-from scipy.optimize import least_squares
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 import numpy as np
@@ -80,14 +80,18 @@ def CosmicFit(x, y, xerr=None, yerr=None, xyerr=None, nwalkers=32, nsteps=5000, 
             return np.full_like(y, 1e100)
         return y - y_model
 
-    coeffs_guess = np.ones(ncoeffs)
-    result = least_squares(residual_function, coeffs_guess)
+    # Set coefficient bounds
+    y_scale = max(np.std(y), 1.0)
+    x_scale = max(np.std(x), 1.0)
+    guess_scale = max(y_scale, y_scale / x_scale)
+    bounds = [(-10 * guess_scale, 10 * guess_scale)] * ncoeffs
 
-    if result.success:
-        coeffs0 = result.x
-    else:
-        print("WARNING: Initial coefficient fit did not converge.")
-        coeffs0 = coeffs_guess
+    # Global search for a good starting point
+    de_result = differential_evolution(lambda c: np.sum(residual_function(c)**2), bounds, seed=42, maxiter=300, tol=1e-10, polish=False)
+
+    # Least Squares
+    res = least_squares(residual_function, de_result.x, max_nfev=20000)
+    coeffs0 = res.x if res.success else de_result.x
     #-------------------------------------------------------------------#
 
 

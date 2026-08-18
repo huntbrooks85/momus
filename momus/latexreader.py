@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------#
-# momus.latexreader v0.2.4
-# By Hunter Brooks, at UToledo (Logarithm & LIATE Updated)
+# momus.latexreader v0.1.0
+# By Hunter Brooks, at UToledo
 #-----------------------------------------------------------------------#
 
 # Import Packages
