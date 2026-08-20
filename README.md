@@ -37,7 +37,7 @@
   <h2 style="font-size: 2em;">🤔 General Logic 🤔</h2>
 </div>
 <p align="center">
-    <a href="https://ibb.co/6cC1Ftwc"><img src="misc/flow-diagram.png" width="40%"></a> <br>
+    <a href="https://ibb.co/6cC1Ftwc"><img src="misc/flow-diagram.png" width="100%"></a> <br>
 </p>
 
 <div align="center">
