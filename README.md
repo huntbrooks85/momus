@@ -140,10 +140,6 @@ All variables for ```CosmicAnalysis``` are:
     - default=```200```
 
 <div align="center">
-  <h2 style="font-size: 2em;"> 🔍 Example 🔎 </h2>
-</div>
-
-<div align="center">
   <h2 style="font-size: 2em;">📞 Support Team 📞</h2>
 </div>
 
