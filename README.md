@@ -41,7 +41,7 @@
 </div>
 
 ### What are The Valid Functions?
-Any function that is continuous over -$\infty$ to $\infty$. This will be tested and if not valid a ```ValueError``` will be returned. To write the equations we provide easy access using LaTeX format. The dependent variable should always be written as x and all coefficients should be written as $\{a_0, a_1, ..., a_{n-1}, a_n \}$. To test your LaTeX equation refer to [LaTeX Equation Editor](https://latexeditor.lagrida.com/).
+Any function that is continuous over $-\infty$ to $\infty$. This will be tested and if not valid a ```ValueError``` will be returned. To write the equations we provide easy access using LaTeX format. The dependent variable should always be written as x and all coefficients should be written as $\{a_0, a_1, ..., a_{n-1}, a_n \}$. To test your LaTeX equation refer to [LaTeX Equation Editor](https://latexeditor.lagrida.com/).
 
 A few examples are shown below: 
 
