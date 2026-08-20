@@ -1,9 +1,0 @@
-momus/backups/*
-.gitattributes
-.gitignore
-
-misc/Momus Diagram.drawio
-
-.DS_Store
-
-momus/.DS_Store
