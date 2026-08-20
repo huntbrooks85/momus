@@ -1,6 +1,6 @@
 
 <p align="center">
-    <a href="https://ibb.co/v6CbwTzT"><img src="/misc/Momus Logo.png" width="180%"></a> <br>
+    <a href="https://ibb.co/v6CbwTzT"><img src="/misc/Momus Logo.png" width="80%"></a> <br>
 </p>
 
 <!-- <div align="center">
