@@ -7,8 +7,11 @@
 </div>
 
 <div align="center">
-  <h2 style="font-size: 2em;"> 🔍 Example 🔎 </h2>
+  <h2 style="font-size: 2em;">🤔 General Logic 🤔</h2>
 </div>
+<p align="center">
+    <a href="https://ibb.co/6cC1Ftwc"><img src="misc/flow-diagram.png" width="100%"></a> <br>
+</p>
 
 <div align="center">
   <p style="font-size: 1.2em;"> <b>
@@ -32,13 +35,6 @@
 ```bash
    pip install momus
 ```
-
-<div align="center">
-  <h2 style="font-size: 2em;">🤔 General Logic 🤔</h2>
-</div>
-<p align="center">
-    <a href="https://ibb.co/6cC1Ftwc"><img src="misc/flow-diagram.png" width="100%"></a> <br>
-</p>
 
 <div align="center">
   <h2 style="font-size: 2em;">🧮 Using momus 🧮</h2>
@@ -142,6 +138,10 @@ All variables for ```CosmicAnalysis``` are:
     - default=```10```
   - **nsamp:** Number of samples shown in figure, to save on storage: *int*
     - default=```200```
+
+<div align="center">
+  <h2 style="font-size: 2em;"> 🔍 Example 🔎 </h2>
+</div>
 
 <div align="center">
   <h2 style="font-size: 2em;">📞 Support Team 📞</h2>
