@@ -181,3 +181,7 @@ cython_debug/
 .cursorindexingignore
 
 momus/backups/*
+.gitattributes
+.gitignore
+
+misc/Momus Diagram.drawio
